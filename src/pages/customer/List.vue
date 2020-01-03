@@ -89,30 +89,29 @@ export default {
                 })
             })
         },
-        toDeleteHandler(id){
-             this.$confirm('此操作将永久删除该文件, 是否继续?', '提示', {
-          confirmButtonText: '确定',
-          cancelButtonText: '取消',
-          type: 'warning'
-        }).then(() => {
+            toDeleteHandler(id){
+            this.$confirm('此操作将永久删除该文件, 是否继续?', '提示', {
+            confirmButtonText: '确定',
+            cancelButtonText: '取消',
+            type: 'warning'
+            }).then(() => {
             //调用后台接口，完成删除操作
-            let url = "http://localhost:6677/customer/deleteById?id"+id;
-            request.get(url).then((response)=>{
+            let url = "http://localhost:6677/customer/deleteById?id="+id;
+            request.get(url).then((request)=>{
                 //刷新数据
                 this.loadData();
-                //提示数据
-                this.$message({
-            type: 'success',
-            message: '删除成功!'
-           });
+                //提示消息
+            this.$message({
+                type: 'success',
+                message: '删除成功!'
+            });
+            });
         }).catch(() => {
-          this.$message({
-            type: 'info',
-            message: '已取消删除'
-          });          
-        });
-                
-            })
+            this.$message({
+                type: 'info',
+                message: '已取消删除'
+            });          
+            });
         },
         toUpdateHandler(row){
             //模态框表单中显示当前行的信息

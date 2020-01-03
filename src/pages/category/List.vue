@@ -103,24 +103,32 @@ export default {
             this.visible=true;
         },
         toDeleteHandler(id){
-              this.$confirm('此操作将永久删除该文件, 是否继续?', '提示', {
-          confirmButtonText: '确定',
-          cancelButtonText: '取消',
-          type: 'warning'
-        }).then(() => {
-          this.$message({
-            type: 'success',
-            message: '删除成功!'
-           });
+            this.$confirm('此操作将永久删除该文件, 是否继续?', '提示', {
+            confirmButtonText: '确定',
+            cancelButtonText: '取消',
+            type: 'warning'
+            }).then(() => {
+            //调用后台接口，完成删除操作
+            let url = "http://localhost:6677/category/deleteById?id="+id;
+            request.get(url).then((request)=>{
+                //刷新数据
+                this.loadData();
+                //提示消息
+            this.$message({
+                type: 'success',
+                message: '删除成功!'
+            });
+            });
         }).catch(() => {
-          this.$message({
-            type: 'info',
-            message: '已取消删除'
-          });          
-        });
+            this.$message({
+                type: 'info',
+                message: '已取消删除'
+            });          
+            });
         },
         toUpdateHandler(row){
             this.title="修改栏目信息";
+            this.form = row;
             this.visible=true;
         },
         closeModalHandler(){
