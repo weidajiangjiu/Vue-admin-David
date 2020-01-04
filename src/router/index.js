@@ -90,7 +90,7 @@ export const constantRoutes = [
         path: 'list',
         name: 'CategoryList',
         component: () => import('@/pages/category/List'),
-        meta: { title: '栏目管理', icon: 'user' }
+        meta: { title: '栏目管理', icon: 'form' }
       }
     ]
   },
@@ -102,7 +102,19 @@ export const constantRoutes = [
         path: 'list',
         name: 'ProductList',
         component: () => import('@/pages/product/List'),
-        meta: { title: '产品管理', icon: 'user' }
+        meta: { title: '产品管理', icon: 'form' }
+      }
+    ]
+  },
+  {
+    path: '/order',
+    component: Layout,
+    children: [
+      {
+        path: 'list',
+        name: 'OrderList',
+        component: () => import('@/pages/order/List'),
+        meta: { title: '订单管理', icon: 'form' }
       }
     ]
   },
