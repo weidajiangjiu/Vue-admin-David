@@ -5,12 +5,13 @@
         <el-button type="danger" size="small">批量删除</el-button>
         <!-- /按钮 -->
          <!-- 表格 -->
-        <el-table :data="employees">
+        <el-table :data="products">
             <el-table-column  type="selection" prop="id" fixed="left" label="编号"></el-table-column>
             <el-table-column prop="name" label="产品名称"></el-table-column>
             <el-table-column prop="price"  label="价格"></el-table-column>
             <el-table-column prop="description" label="描述"></el-table-column>
             <el-table-column prop="status" label="所属产品"></el-table-column>
+             <el-table-column prop="categoryId" label="所属分类"></el-table-column>
             <el-table-column fixed="right" label="操作">
             <template v-slot="slot">
                 <!-- <a href="" @click.prevent="toDeleteHandler(slot.row.id)">删除</a>  -->
@@ -44,14 +45,14 @@
           <el-select v-model="form.categoryId">
               <el-option
       v-for="item in options"
-      :key="item.value"
-      :label="item.label"
-      :value="item.value">
+      :key="item.id"
+      :label="item.name"
+      :value="item.id">
           </el-option>
           </el-select>
       </el-form-item>
       <el-form-item label="介绍">
-          <el-input v-model="form.description"/>
+          <el-input  type="textarea" v-model="form.description"/>
       </el-form-item>
       <el-form-item label="产品主图">
   <el-upload
@@ -77,13 +78,13 @@
     </div>
 </template>
  <script>
-    import request from '@/utils/request'//自定义库
+import request from '@/utils/request'//自定义库
 import querystring from 'querystring'//系统库
 export default {
     data(){
         return{
-            title:"添加产品信息",
-            visible:false,
+        title:"添加产品信息",
+        visible:false,
         products:[],
         form:{},
         options: [],
@@ -134,12 +135,14 @@ export default {
             //this。title/this.toAddHandler
           let url = "http://localhost:6677/product/findAll"
           request.get(url).then((response)=>{
-              this.employees = response.data;
+              this.products = response.data;
           })
         },
         toAddHandler(){
             this.title="添加产品信息";
             this.visible=true;
+            //将form变为初始值
+            this.form={}
         },
          toDeleteHandler(id){
             this.$confirm('此操作将永久删除该文件, 是否继续?', '提示', {
