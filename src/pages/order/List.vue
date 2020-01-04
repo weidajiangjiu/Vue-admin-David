@@ -14,7 +14,7 @@
       <el-tab-pane label="已完成" name="seventh" ></el-tab-pane>
     </el-tabs>
          <!-- 表格 -->
-        <el-table :data="orders">
+        <el-table :data="orders.list">
             <el-table-column prop="id" fixed="left" label="订单编号"></el-table-column>
             <el-table-column prop="orderTime" label="下单时间"></el-table-column>
             <el-table-column prop="total"  label="总价"></el-table-column>
@@ -35,9 +35,9 @@
          <!--分页-->
     <el-pagination
     layout="prev, pager, next"
-    :total="50">
+    :total="orders.total" @current-change="pageChageHandler">
   </el-pagination>
-  <!--/分页-->
+        <!--/分页-->
   <el-dialog
       title="录入订单信息"
       :visible.sync="visible"
@@ -84,6 +84,10 @@ export default {
       activeName: 'second',
       form: {
         type: 'order'
+      },
+      params:{
+          page:0,
+          pageSize:10,
       }
         }
     },
@@ -92,18 +96,30 @@ export default {
         this.loadData();
     },
     methods :{
+        pageChageHandler(page){
+            this.params.page = page-1;
+            this.loadData();
+        },
         handleClick(tab, event) {
       console.log(tab, event)
-    },
+        },
         //重载员工数据
-        loadData(){
+    loadData(){
             //this ->vue实例，通过vue实例访问该实例中数据，methods中
-            //this。title/this.toAddHandler
-          let url = "http://localhost:6677/order/findAll"
-          request.get(url).then((response)=>{
+            //this.title/this.toAddHandler
+          let url = "http://localhost:6677/order/queryPage"
+          request({
+              url,
+              method:"post",
+              headers:{
+                  "Content-Type":"application/x-www-form-urlencoded"
+              },
+              data:querystring.stringify(this.params)
+          }).then((response)=>{
               this.orders = response.data;
           })
         },
+        
         submitHandler(){
             let url = "http://localhost:6677/order/save";
             //前端向后台发送请求，完成数据的保存操作

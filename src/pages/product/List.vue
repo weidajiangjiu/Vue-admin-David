@@ -84,32 +84,26 @@ export default {
         return{
             title:"添加产品信息",
             visible:false,
-        employees:[],
+        products:[],
         form:{},
-         options: [{
-          value: '选项1',
-          label: '洗护服务'
-        }, {
-          value: '选项2',
-          label: '月嫂服务'
-        }, {
-          value: '选项3',
-          label: '家具养护'
-        }, {
-          value: '选项4',
-          label: '龙须面'
-        }, {
-          value: '选项5',
-          label: '北京烤鸭'
-        }],
-
+        options: [],
         }
     },
     created(){
         //在页面加载出来的时候加载数据
         this.loadData();
+        //加载栏目信息，用于表单中下拉菜单
+        this.loadCategory();
     },
     methods :{
+         loadCategory(){
+            //this ->vue实例，通过vue实例访问该实例中数据，methods中
+            //this。title/this.toAddHandler
+          let url = "http://localhost:6677/category/findAll"
+          request.get(url).then((response)=>{
+              this.options = response.data;
+          })
+        },
         submitHandler(){
             let url = "http://localhost:6677/product/saveOrUpdate";
             //前端向后台发送请求，完成数据的保存操作
