@@ -12,6 +12,8 @@
             <el-table-column prop="description" label="描述"></el-table-column>
             <el-table-column prop="status" label="所属产品"></el-table-column>
              <el-table-column prop="categoryId" label="所属分类"></el-table-column>
+             <el-table-column prop="photo" label="照片"></el-table-column>
+
             <el-table-column fixed="right" label="操作">
             <template v-slot="slot">
                 <!-- <a href="" @click.prevent="toDeleteHandler(slot.row.id)">删除</a>  -->
@@ -51,23 +53,19 @@
           </el-option>
           </el-select>
       </el-form-item>
-      <el-form-item label="介绍">
+      <el-form-item label="描述">
           <el-input  type="textarea" v-model="form.description"/>
       </el-form-item>
       <el-form-item label="产品主图">
-  <el-upload
-  class="upload-demo"
-  action="https://jsonplaceholder.typicode.com/posts/"
-  :on-preview="handlePreview"
-  :on-remove="handleRemove"
-  :before-remove="beforeRemove"
-  multiple
-  :limit="3"
-  :on-exceed="handleExceed"
-  :file-list="fileList">
-  <el-button size="small" type="primary">点击上传</el-button>
-  <div slot="tip" class="el-upload__tip">只能上传jpg/png文件，且不超过500kb</div>
-</el-upload>
+    <el-upload
+    class="upload-demo"
+    action="http://134.175.154.93:6677//file/upload"
+    :file-list="fileList"
+    :on-success="uploadSuccessHandler"
+    list-type="picture">
+    <el-button size="small" type="primary">点击上传</el-button>
+    <div slot="tip" class="el-upload__tip">只能上传jpg/png文件，且不超过500kb</div>
+    </el-upload>
 </el-form-item>
  </el-form>
   <span slot="footer" class="dialog-footer">
@@ -88,6 +86,7 @@ export default {
         products:[],
         form:{},
         options: [],
+        fileList:[],
         }
     },
     created(){
@@ -97,6 +96,12 @@ export default {
         this.loadCategory();
     },
     methods :{
+        //加载栏目信息
+        uploadSuccessHandler(response){
+            let photo = "http://134.175.154.93:8888/group1/"+response.data.id
+            //将图片地址设置到form中，便于一起提交给后台
+            this.form.photo = photo;
+        },
          loadCategory(){
             //this ->vue实例，通过vue实例访问该实例中数据，methods中
             //this。title/this.toAddHandler
@@ -143,6 +148,7 @@ export default {
             this.visible=true;
             //将form变为初始值
             this.form={}
+            this.fileList=[]
         },
          toDeleteHandler(id){
             this.$confirm('此操作将永久删除该文件, 是否继续?', '提示', {
@@ -172,6 +178,7 @@ export default {
             this.title="修改产品信息";
             this.form = row;
             this.visible=true;
+            this.fileList=[]
         },
         closeModalHandler(){
             this.visible=false;
